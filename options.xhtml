@@ -13347,6 +13347,37 @@ null or (positive integer, meaning &gt;0)</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.autorandr.profiles._name_.config._name_.extraConfig"></a><a class="term" href="options.xhtml#opt-programs.autorandr.profiles._name_.config._name_.extraConfig"><code class="option">programs.autorandr.profiles.&lt;name&gt;.config.&lt;name&gt;.extraConfig</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra lines to append to this profile’s config.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">&#x27;&#x27;
+  x-prop-non_desktop 0
+  some-key some-value
+&#x27;&#x27;
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/autorandr.nix" target="_top">
+&lt;home-manager/modules/programs/autorandr.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.autorandr.profiles._name_.config._name_.filter"></a><a class="term" href="options.xhtml#opt-programs.autorandr.profiles._name_.config._name_.filter"><code class="option">programs.autorandr.profiles.&lt;name&gt;.config.&lt;name&gt;.filter</code>
   </a>
  </span>
@@ -20085,6 +20116,34 @@ path</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-programs.fish.preferAbbrs"></a><a class="term" href="options.xhtml#opt-programs.fish.preferAbbrs"><code class="option">programs.fish.preferAbbrs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>If enabled, abbreviations will be preferred over aliases when
+other modules define aliases for fish.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fish.nix" target="_top">
+&lt;home-manager/modules/programs/fish.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-programs.fish.shellAbbrs"></a><a class="term" href="options.xhtml#opt-programs.fish.shellAbbrs"><code class="option">programs.fish.shellAbbrs</code>
   </a>
  </span>
@@ -21520,6 +21579,64 @@ attribute set of (string or boolean or signed integer or attribute set of (strin
   features = &quot;decorations&quot;;
   whitespace-error-style = &quot;22 reverse&quot;;
 }
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix" target="_top">
+&lt;home-manager/modules/programs/git.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.git.diff-highlight.enable"></a><a class="term" href="options.xhtml#opt-programs.git.diff-highlight.enable"><code class="option">programs.git.diff-highlight.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Enable the contrib <span class="command"><strong>diff-highlight</strong></span> syntax highlighter.
+See <a class="link" href="https://github.com/git/git/blob/master/contrib/diff-highlight/README"  target="_top">https://github.com/git/git/blob/master/contrib/diff-highlight/README</a>,</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix" target="_top">
+&lt;home-manager/modules/programs/git.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.git.diff-highlight.pagerOpts"></a><a class="term" href="options.xhtml#opt-programs.git.diff-highlight.pagerOpts"><code class="option">programs.git.diff-highlight.pagerOpts</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Arguments to be passed to <span class="command"><strong>less</strong></span>.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;--tabs=4&quot;
+  &quot;-RFX&quot;
+]
 </code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
@@ -24386,6 +24503,9 @@ package</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.helix</code></p>
 
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.evil-helix</code></p>
+
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
 <tr><td>
@@ -24496,7 +24616,6 @@ for more information.</p>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
-  # the language-server option currently requires helix from the master branch at https://github.com/helix-editor/helix/
   language-server.typescript-language-server = with pkgs.nodePackages; {
     command = &quot;${typescript-language-server}/bin/typescript-language-server&quot;;
     args = [ &quot;--stdio&quot; &quot;--tsserver-path=${typescript}/lib/node_modules/typescript/lib&quot; ];
@@ -28056,18 +28175,21 @@ or <code class="filename">Library/Application Support/k9s/skins/</code> (darwin)
 <a class="link" href="https://k9scli.io/topics/skins/"  target="_top">https://k9scli.io/topics/skins/</a> for supported values.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (YAML value)</p>
+attribute set of (YAML value or path)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
-<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">my_blue_skin = {
-  k9s = {
-    body = {
-      fgColor = &quot;dodgerblue&quot;;
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  my_blue_skin = {
+    k9s = {
+      body = {
+        fgColor = &quot;dodgerblue&quot;;
+      };
     };
   };
-};
+  my_red_skin = ./red_skin.yaml;
+}
 
 </code></pre>
 
@@ -30709,15 +30831,15 @@ string</p>
 </dd>
 <dt>
  <span class="term">
- <a id="opt-programs.kitty.theme"></a><a class="term" href="options.xhtml#opt-programs.kitty.theme"><code class="option">programs.kitty.theme</code>
+ <a id="opt-programs.kitty.themeFile"></a><a class="term" href="options.xhtml#opt-programs.kitty.themeFile"><code class="option">programs.kitty.themeFile</code>
   </a>
  </span>
 </dt>
 <dd>
-<p>Apply a Kitty color theme. This option takes the friendly name of
-any theme given by the command <span class="command"><strong>kitty +kitten themes</strong></span>.
-See <a class="link" href="https://github.com/kovidgoyal/kitty-themes"  target="_top">https://github.com/kovidgoyal/kitty-themes</a>
-for more details.</p>
+<p>Apply a Kitty color theme. This option takes the file name of a theme
+in <code class="literal">kitty-themes</code>, without the <code class="literal">.conf</code> suffix. See
+<a class="link" href="https://github.com/kovidgoyal/kitty-themes/tree/master/themes"  target="_top">https://github.com/kovidgoyal/kitty-themes/tree/master/themes</a> for a
+list of themes.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or string</p>
@@ -30726,7 +30848,7 @@ null or string</p>
 <code class="literal">null</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span>
-<code class="literal">&quot;Space Gray Eighties&quot;</code></p>
+<code class="literal">&quot;SpaceGray_Eighties&quot;</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -34832,6 +34954,102 @@ boolean</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neomutt.nix" target="_top">
 &lt;home-manager/modules/programs/neomutt.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.neovide.enable"></a><a class="term" href="options.xhtml#opt-programs.neovide.enable"><code class="option">programs.neovide.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable Neovide, No Nonsense Neovim Client in Rust.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovide.nix" target="_top">
+&lt;home-manager/modules/programs/neovide.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.neovide.package"></a><a class="term" href="options.xhtml#opt-programs.neovide.package"><code class="option">programs.neovide.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The neovide package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.neovide</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovide.nix" target="_top">
+&lt;home-manager/modules/programs/neovide.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-programs.neovide.settings"></a><a class="term" href="options.xhtml#opt-programs.neovide.settings"><code class="option">programs.neovide.settings</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Neovide configuration.
+For available settings see <a class="link" href="https://neovide.dev/config-file.html"  target="_top">https://neovide.dev/config-file.html</a>.
+For any option not found will need to be done in your neovim’s config instead.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+TOML value</p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
+  fork = false;
+  frame = &quot;full&quot;;
+  idle = true;
+  maximized = false;
+  neovim-bin = &quot;/usr/bin/nvim&quot;;
+  no-multigrid = false;
+  srgb = false;
+  tabs = true;
+  theme = &quot;auto&quot;;
+  title-hidden = true;
+  vsync = true;
+  wsl = false;
+
+  font = {
+    normal = [];
+    size = 14.0;
+  };
+}
+
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/programs/neovide.nix" target="_top">
+&lt;home-manager/modules/programs/neovide.nix&gt;
 </a></code>
 </td></tr>
 </table>
@@ -39344,8 +39562,7 @@ t { montage_mode_enter() }
 </dt>
 <dd>
 <p>Configuration written to <code class="filename">$XDG_CONFIG_HOME/pqivrc</code>. See
-<span class="citerefentry"><span class="refentrytitle">pqiv</span>(1)</span> for a list of available options. To set a
-boolean flag, set the value to 1.</p>
+<span class="citerefentry"><span class="refentrytitle">pqiv</span>(1)</span> for a list of available options.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
@@ -39355,8 +39572,8 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   options = {
-    lazy-load = 1;
-    hide-info-box = 1;
+    lazy-load = true;
+    hide-info-box = true;
     background-pattern = &quot;black&quot;;
     thumbnail-size = &quot;256x256&quot;;
     command-1 = &quot;thunar&quot;;
@@ -46046,6 +46263,9 @@ package</p>
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">pkgs.taskwarrior</code></p>
 
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.taskwarrior3</code></p>
+
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
 <tr><td>
@@ -47923,13 +48143,23 @@ string <span class="emphasis"><em>(read only)</em></span></p>
 <code class="filename">user.js</code>.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (boolean or signed integer or string)</p>
+Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">{
   &quot;mail.spellcheck.inline&quot; = false;
+  &quot;mailnews.database.global.views.global.columns&quot; = {
+    selectCol = {
+      visible = false;
+      ordinal = 1;
+    };
+    threadCol = {
+      visible = true;
+      ordinal = 2;
+    };
+  };
 }
 
 </code></pre>
@@ -48043,7 +48273,7 @@ boolean</p>
 all profiles.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
-attribute set of (boolean or signed integer or string)</p>
+Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
 <code class="literal">{ }</code></p>
@@ -53400,7 +53630,7 @@ package</p>
  </span>
 </dt>
 <dd>
-<p>List of options to pass to zoxide.</p>
+<p>List of options to pass to zoxide init.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 list of string</p>
@@ -53409,7 +53639,7 @@ list of string</p>
 <code class="literal">[ ]</code></p>
 
 <p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
-  &quot;--no-aliases&quot;
+  &quot;--no-cmd&quot;
 ]
 </code></pre>
 
@@ -62860,6 +63090,33 @@ null or boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.kanshi.profiles._name_.outputs._.alias"></a><a class="term" href="options.xhtml#opt-services.kanshi.profiles._name_.outputs._.alias"><code class="option">services.kanshi.profiles.&lt;name&gt;.outputs.*.alias</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Defines an alias for the output</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;laptopMonitor&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix" target="_top">
+&lt;home-manager/modules/services/kanshi.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.kanshi.profiles._name_.outputs._.criteria"></a><a class="term" href="options.xhtml#opt-services.kanshi.profiles._name_.outputs._.criteria"><code class="option">services.kanshi.profiles.&lt;name&gt;.outputs.*.criteria</code>
   </a>
  </span>
@@ -63131,6 +63388,24 @@ null or boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.kanshi.settings._.output.alias"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.alias"><code class="option">services.kanshi.settings.*.output.alias</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Defines an alias for the output</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;laptopMonitor&quot;</code></p>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.kanshi.settings._.output.criteria"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.output.criteria"><code class="option">services.kanshi.settings.*.output.criteria</code>
   </a>
  </span>
@@ -63321,6 +63596,24 @@ null or boolean</p>
 
 <p><span class="emphasis"><em>Example:</em></span>
 <code class="literal">true</code></p>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.kanshi.settings._.profile.outputs._.alias"></a><a class="term" href="options.xhtml#opt-services.kanshi.settings._.profile.outputs._.alias"><code class="option">services.kanshi.settings.*.profile.outputs.*.alias</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Defines an alias for the output</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">&quot;laptopMonitor&quot;</code></p>
 </dd>
 <dt>
  <span class="term">
@@ -67787,6 +68080,36 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.poweralertd.extraArgs"></a><a class="term" href="options.xhtml#opt-services.poweralertd.extraArgs"><code class="option">services.poweralertd.extraArgs</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Extra command line arguments to pass to poweralertd.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+list of string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">[ ]</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span></p><pre><code class="programlisting">[
+  &quot;-s&quot;
+  &quot;-S&quot;
+]
+</code></pre>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/poweralertd.nix" target="_top">
+&lt;home-manager/modules/services/poweralertd.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.psd.enable"></a><a class="term" href="options.xhtml#opt-services.psd.enable"><code class="option">services.psd.enable</code>
   </a>
  </span>
@@ -69666,8 +69989,10 @@ one of “before-sleep”, “after-resume”, “lock”, “unlock”</p>
 <p><span class="emphasis"><em>Type:</em></span>
 list of string</p>
 
-<p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">[ ]</code></p>
+<p><span class="emphasis"><em>Default:</em></span></p><pre><code class="programlisting">[
+  &quot;-w&quot;
+]
+</code></pre>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -69889,7 +70214,7 @@ JSON value</p>
   notification-inline-replies = false;
   notification-icon-size = 64;
   notification-body-image-height = 100;
-  notification-body-image-width = 200
+  notification-body-image-width = 200;
 };
 
 </code></pre>
@@ -70440,6 +70765,33 @@ boolean</p>
 </dd>
 <dt>
  <span class="term">
+ <a id="opt-services.taskwarrior-sync.package"></a><a class="term" href="options.xhtml#opt-services.taskwarrior-sync.package"><code class="option">services.taskwarrior-sync.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The taskwarrior package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.taskwarrior</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">pkgs.taskwarrior3</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/taskwarrior-sync.nix" target="_top">
+&lt;home-manager/modules/services/taskwarrior-sync.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
  <a id="opt-services.taskwarrior-sync.frequency"></a><a class="term" href="options.xhtml#opt-services.taskwarrior-sync.frequency"><code class="option">services.taskwarrior-sync.frequency</code>
   </a>
  </span>
@@ -70550,6 +70902,81 @@ attribute set of (null or string or boolean or signed integer)</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/trayer.nix" target="_top">
 &lt;home-manager/modules/services/trayer.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.trayscale.enable"></a><a class="term" href="options.xhtml#opt-services.trayscale.enable"><code class="option">services.trayscale.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to enable An unofficial GUI wrapper around the Tailscale CLI client…</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Example:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/trayscale.nix" target="_top">
+&lt;home-manager/modules/services/trayscale.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.trayscale.package"></a><a class="term" href="options.xhtml#opt-services.trayscale.package"><code class="option">services.trayscale.package</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>The trayscale package to use.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+package</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">pkgs.trayscale</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/trayscale.nix" target="_top">
+&lt;home-manager/modules/services/trayscale.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-services.trayscale.hideWindow"></a><a class="term" href="options.xhtml#opt-services.trayscale.hideWindow"><code class="option">services.trayscale.hideWindow</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether to hide the trayscale window on startup.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/services/trayscale.nix" target="_top">
+&lt;home-manager/modules/services/trayscale.nix&gt;
 </a></code>
 </td></tr>
 </table>
@@ -76615,7 +77042,8 @@ boolean</p>
 ‘wrapperFeatures’, ‘extraSessionCommands’, and ‘extraOptions’.
 Set to <code class="literal">null</code> to not add any Sway package to your
 path. This should be done if you want to use the NixOS Sway
-module to install Sway.</p>
+module to install Sway. Beware setting to <code class="literal">null</code> will also disable
+reloading Sway when new config is activated.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 null or package</p>
@@ -76639,13 +77067,13 @@ null or package</p>
  </span>
 </dt>
 <dd>
-<p>If enabled (the default), validates the generated config file.</p>
+<p>If enabled, validates the generated config file.</p>
 
 <p><span class="emphasis"><em>Type:</em></span>
 boolean</p>
 
 <p><span class="emphasis"><em>Default:</em></span>
-<code class="literal">true</code></p>
+<code class="literal">wayland.windowManager.sway.package != null</code></p>
 
 <p><span class="emphasis"><em>Declared by:</em></span></p>
 <table border="0" summary="Simple list" class="simplelist">
@@ -80792,6 +81220,215 @@ boolean</p>
 <tr><td>
 <code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg-portal.nix" target="_top">
 &lt;home-manager/modules/misc/xdg-portal.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile"></a><a class="term" href="options.xhtml#opt-xdg.stateFile"><code class="option">xdg.stateFile</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Attribute set of files to link into the user’s XDG
+state home.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+attribute set of (submodule)</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">{ }</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.enable"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.enable"><code class="option">xdg.stateFile.&lt;name&gt;.enable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Whether this file should be generated. This option allows specific
+files to be disabled.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">true</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.executable"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.executable"><code class="option">xdg.stateFile.&lt;name&gt;.executable</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Set the execute bit. If <code class="literal">null</code>, defaults to the mode
+of the <code class="varname">source</code> file or to <code class="literal">false</code>
+for files created through the <code class="varname">text</code> option.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.onChange"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.onChange"><code class="option">xdg.stateFile.&lt;name&gt;.onChange</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Shell commands to run when file has changed between
+generations. The script will be run
+<span class="emphasis"><em>after</em></span> the new files have been linked
+into place.</p><p>Note, this code is always run when <code class="literal">recursive</code> is
+enabled.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">&quot;&quot;</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.recursive"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.recursive"><code class="option">xdg.stateFile.&lt;name&gt;.recursive</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>If the file source is a directory, then this option
+determines whether the directory should be recursively
+linked to the target location. This option has no effect
+if the source is a file.</p><p>If <code class="literal">false</code> (the default) then the target
+will be a symbolic link to the source directory. If
+<code class="literal">true</code> then the target will be a
+directory structure matching the source’s but whose leafs
+are symbolic links to the files of the source directory.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+boolean</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">false</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.source"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.source"><code class="option">xdg.stateFile.&lt;name&gt;.source</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path of the source file or directory. If
+<a class="xref" href="options.xhtml#opt-xdg.stateFile._name_.text"  ><code class="option">xdg.stateFile.&lt;name&gt;.text</code></a>
+is non-null then this option will automatically point to a file
+containing that text.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+path</p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.target"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.target"><code class="option">xdg.stateFile.&lt;name&gt;.target</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Path to target file relative to &lt;varname&gt;xdg.stateHome&lt;/varname&gt;.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+string</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">name</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
+</a></code>
+</td></tr>
+</table>
+</dd>
+<dt>
+ <span class="term">
+ <a id="opt-xdg.stateFile._name_.text"></a><a class="term" href="options.xhtml#opt-xdg.stateFile._name_.text"><code class="option">xdg.stateFile.&lt;name&gt;.text</code>
+  </a>
+ </span>
+</dt>
+<dd>
+<p>Text of the file. If this option is null then
+<a class="xref" href="options.xhtml#opt-xdg.stateFile._name_.source"  ><code class="option">xdg.stateFile.&lt;name&gt;.source</code></a>
+must be set.</p>
+
+<p><span class="emphasis"><em>Type:</em></span>
+null or strings concatenated with “\n”</p>
+
+<p><span class="emphasis"><em>Default:</em></span>
+<code class="literal">null</code></p>
+
+<p><span class="emphasis"><em>Declared by:</em></span></p>
+<table border="0" summary="Simple list" class="simplelist">
+<tr><td>
+<code class="filename"><a class="filename"  href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg.nix" target="_top">
+&lt;home-manager/modules/misc/xdg.nix&gt;
 </a></code>
 </td></tr>
 </table>
