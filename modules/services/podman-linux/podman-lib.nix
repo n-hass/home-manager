@@ -86,4 +86,16 @@ in {
   #
   # Tracking for a potential solution: https://github.com/NixOS/nixpkgs/issues/138423
   newuidmapPaths = "/run/wrappers/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+
+  sourceHelpers = {
+    ifNotNull = condition: text: if condition != null then text else "";
+    ifNotEmptyList = list: text: if list != [ ] then text else "";
+    ifNotEmptySet = set: text: if set != { } then text else "";
+  };
+
+  removeBlankLines = text:
+    let
+      lines = splitString "\n" text;
+      nonEmptyLines = filter (line: line != "") lines;
+    in concatStringsSep "\n" nonEmptyLines;
 }
