@@ -7,7 +7,7 @@
       autoupdate = "registry";
       autostart = true;
       image = "docker.io/alpine:latest";
-      entrypoint = "sleep 1000";
+      entrypoint = "/sleep.sh";
       environment = {
         "VAL_A" = "A";
         "VAL_B" = 2;
@@ -18,12 +18,12 @@
       devices = [ "/dev/null:/dev/null" ];
 
       networks = [ "mynet" ];
-      networkAlias = "test-alias";
+      networkAliases = [ "test-alias" ];
 
-      extraOptions = [ "--security-opt=no-new-privileges" ];
+      extraPodmanArgs = [ "--security-opt=no-new-privileges" ];
       extraContainerConfig = { ReadOnlyTmpfs = true; };
-      serviceConfig = { Restart = "on-failure"; };
-      unitConfig = { Before = [ "fake.target" ]; };
+      extraServiceConfig = { Restart = "on-failure"; };
+      extraUnitConfig = { Before = [ "fake.target" ]; };
     };
 
     nmt.script = ''
@@ -40,7 +40,7 @@
       assertFileContains $containerFile \
         "Image=docker.io/alpine:latest"
       assertFileContains $containerFile \
-        "PodmanArgs=--network-alias test-alias --entrypoint sleep 1000 --security-opt=no-new-privileges"
+        "PodmanArgs=--network-alias test-alias --entrypoint /sleep.sh --security-opt=no-new-privileges"
       assertFileContains $containerFile \
         "Environment=VAL_A=A VAL_B=2 VAL_C=false"
       assertFileContains $containerFile \
