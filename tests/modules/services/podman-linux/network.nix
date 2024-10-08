@@ -2,34 +2,40 @@
 
 {
   config = {
-    services.podman.networks.mynet = {
+    services.podman.networks."my-net" = {
       subnet = "192.168.1.0/24";
       gateway = "192.168.1.1";
-      extraNetworkConfig = {
-        Options = "isolate=true";
-        PodmanArgs = [ "--dns=192.168.55.1" "--log-level=debug" ];
+      extraConfig = {
+        Network = {
+          Options = "isolate=true";
+          PodmanArgs = [ "--dns=192.168.55.1" "--log-level=debug" ];
+        };
       };
     };
 
     nmt.script = ''
       configPath=home-files/.config/systemd/user
-      networkFile=$configPath/podman-mynet-network.service
+      networkFile=$configPath/podman-my-net-network.service
       assertFileExists $networkFile
 
       assertFileContains $networkFile \
-        "mynet.network"
+        "my-net.network"
       assertFileContains $networkFile \
         "Subnet=192.168.1.0/24"
       assertFileContains $networkFile \
         "Gateway=192.168.1.1"
       assertFileContains $networkFile \
-        "PodmanArgs=--dns=192.168.55.1 --log-level=debug"
+        "PodmanArgs=--dns=192.168.55.1"
+      assertFileContains $networkFile \
+        "PodmanArgs=--log-level=debug"
       assertFileContains $networkFile \
         "Options=isolate=true"
       assertFileContains $networkFile \
-        "NetworkName=mynet"
+        "NetworkName=my-net"
       assertFileContains $networkFile \
-        "WantedBy=multi-user.target default.target"
+        "WantedBy=multi-user.target"
+      assertFileContains $networkFile \
+        "WantedBy=default.target"
       assertFileContains $networkFile \
         "RemainAfterExit=yes"
       assertFileContains $networkFile \

@@ -5,7 +5,7 @@ with lib;
 let cfg = config.services.podman;
 in {
   options.services.podman = {
-    auto-update = {
+    autoUpdate = {
       enable = mkOption {
         type = types.bool;
         default = false;
@@ -21,7 +21,7 @@ in {
   };
 
   config = mkIf pkgs.stdenv.isLinux (mkMerge [
-    (mkIf cfg.auto-update.enable {
+    (mkIf cfg.autoUpdate.enable {
       systemd.user.services."podman-auto-update" = {
         Unit = {
           Description = "Podman auto-update service";
@@ -44,7 +44,7 @@ in {
       systemd.user.timers."podman-auto-update" = {
         Unit = { Description = "Podman auto-update timer"; };
         Timer = {
-          OnCalendar = cfg.auto-update.OnCalendar;
+          OnCalendar = cfg.autoUpdate.OnCalendar;
           RandomizedDelaySec = 300;
           Persistent = true;
         };
