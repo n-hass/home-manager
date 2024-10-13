@@ -31,14 +31,46 @@ in {
   buildConfigAsserts = quadletName: section: config:
     let
       configRules = {
-        Container = { };
-        Install = { WantedBy = with types; nullOr (listOf str); };
-        Network = { };
+        Container = {
+          AddCapability = with types; listOf str;
+          AddDevice = with types; listOf str;
+          AutoUpdate = types.enum [ null "registry" "local" ];
+          ContainerName = types.str;
+          DropCapability = with types; listOf str;
+          Exec = types.str;
+          Image = types.str;
+          Label = primitiveAttrs;
+          Network = with types; listOf str;
+          PodmanArgs = with types; listOf str;
+          PublishPort = with types; listOf str;
+          Volume = with types; listOf str;
+        };
+        Install = {
+          WantedBy = with types; listOf str;
+        };
+        Network = {
+          Driver = with types; enum [ "bridge" "ipvlan" "macvlan" ];
+          Gateway = types.str;
+          NetworkName = types.str;
+          Label = primitiveAttrs;
+          Options = primitiveAttrs;
+          PodmanArgs = with types; listOf str;
+          Subnet = types.str;
+        };
         Service = {
+          Environment = primitiveAttrs;
+          EnvironmentFile = with types; listOf str;
+          ExecStartPre = with types; listOf str;
+          RemainAfterExit = with types; nullOr enum [ "yes" ];
           Restart = types.enum [ "no" "always" "on-failure" "unless-stopped" ];
+          TimeoutStartSec = types.int;
           TimeoutStopSec = types.int;
         };
-        Unit = { After = with types; nullOr (listOf str); };
+        Unit = {
+          After = with types; listOf str;
+          Description = types.str;
+          Requires = with types; listOf str;
+        };
       };
     in flatten (mapAttrsToList (name: value:
       if hasAttr name configRules.${section} then [{

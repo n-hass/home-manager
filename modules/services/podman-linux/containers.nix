@@ -6,10 +6,15 @@ let
   podman-lib = import ./podman-lib.nix { inherit lib; };
 
   createQuadletSource = name: containerDef:
-    let
+  let
+      mapHmNetworks = network:
+        if builtins.hasAttr network config.services.podman.networks then
+          "podman-${network}-network.service"
+        else null;
+
       cfg = (lib.recursiveUpdate {
         Container = {
-          AddCapabiility = containerDef.addCapabilities;
+          AddCapability = containerDef.addCapabilities;
           AddDevice = containerDef.devices;
           AutoUpdate = containerDef.autoUpdate;
           ContainerName = name;
@@ -18,7 +23,7 @@ let
           Image = containerDef.image;
           Label = (lib.recursiveUpdate { "nix.home-manager.managed" = true; }
             containerDef.labels);
-          Network = (if (builtins.elem containerDef.networkMode [ "host" ]) then
+          Network = (if (builtins.elem containerDef.networkMode [ "host" "none" ]) then
             [ containerDef.networkMode ]
           else
             containerDef.networks);
@@ -50,10 +55,8 @@ let
         };
         Unit = {
           After = [ "network.target" ]
-            ++ (map (network: "podman-${network}-network.service")
-              containerDef.networks);
-          Requires = (map (network: "podman-${network}-network.service")
-            containerDef.networks);
+            ++ (map mapHmNetworks containerDef.networks);
+          Requires = (map mapHmNetworks containerDef.networks);
           Description = (if (builtins.isString containerDef.description) then
             containerDef.description
           else
@@ -107,8 +110,8 @@ in let
       };
 
       autoUpdate = mkOption {
-        type = with types; enum [ "" "registry" "local" ];
-        default = "";
+        type = with types; enum [ null "registry" "local" ];
+        default = null;
         description = "The autoupdate policy for the container.";
         example = literalMD ''
           `autoUpdate = "registry";`
@@ -233,7 +236,7 @@ in let
       };
 
       networkMode = mkOption {
-        type = with types; nullOr str;
+        type = with types; nullOr (enum [ "host" "none" ]);
         default = null;
         description = "The network mode for the container.";
         example = literalMD ''

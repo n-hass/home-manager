@@ -7,7 +7,9 @@
       gateway = "192.168.1.1";
       extraConfig = {
         Network = {
-          Options = "isolate=true";
+          Options = {
+            isolate = "true";
+          };
           PodmanArgs = [ "--dns=192.168.55.1" "--log-level=debug" ];
         };
       };
