@@ -8,98 +8,98 @@ let
   quadletActivationCleanupScript = ''
     PATH=$PATH:${podman-lib.newuidmapPaths}
 
-    resourceManifest=()
-    # Define VERBOSE_ENABLED as a function
+    DRYRUN_ENABLED() {
+      return $([ -n "''${DRY_RUN:-}" ] && echo 0 || echo 1)
+    }
+
     VERBOSE_ENABLED() {
-      if [[ -n "''${VERBOSE:-}" ]]; then
-        return 0
+      return $([ -n "''${VERBOSE:-}" ] && echo 0 || echo 1)
+    }
+
+    cleanup() {
+      local resourceType=''${1}
+      local manifestFile="${config.xdg.configHome}/podman/''${2}"
+      local extraListCommands="''${3:-}"
+      [[ ''${resourceType} = "container" ]] && extraListCommands+=" -a"
+
+      [ ! -f "''${manifestFile}" ] && VERBOSE_ENABLED && echo "Manifest does not exist: ''${manifestFile}" && return 0
+
+      VERBOSE_ENABLED && echo "Cleaning up ''${resourceType}s not in manifest..." || true
+
+      loadManifest "''${manifestFile}"
+
+      formatString="{{.Name}}"
+      [[ ''${resourceType} = "container" ]] && formatString="{{.Names}}"
+
+      # Capture the output of the podman command to a variable
+      local listOutput=$(${config.services.podman.package}/bin/podman ''${resourceType} ls ''${extraListCommands} --filter 'label=nix.home-manager.managed=true' --format "''${formatString}")
+
+      IFS=$'\n' read -r -d "" -a podmanResources <<< "''${listOutput}" || true
+
+      # Check if the array is populated and iterate over it
+      if [ ''${#podmanResources[@]} -eq 0 ]; then
+        VERBOSE_ENABLED && echo "No ''${resourceType}s available to process." || true
       else
-        return 1
+        for resource in "''${podmanResources[@]}"; do
+            if ! isResourceInManifest "''${resource}"; then
+              removeResource "''${resourceType}" "''${resource}"
+            else
+              VERBOSE_ENABLED && echo "Keeping managed ''${resourceType}: ''${resource}" || true
+            fi
+          done
       fi
     }
 
-    # Function to fill resourceManifest from the manifest file
-    function loadManifest {
-      local manifestFile="$1"
-      VERBOSE_ENABLED && echo "Loading manifest from $manifestFile..."
-      IFS=$'\n' read -r -d "" -a resourceManifest <<< "$(cat "$manifestFile")" || true
-    }
-
-    function isResourceInManifest {
-      local resource="$1"
+    isResourceInManifest() {
+      local resource="''${1}"
       for manifestEntry in "''${resourceManifest[@]}"; do
-        if [ "$resource" = "$manifestEntry" ]; then
+        if [ "''${resource}" = "''${manifestEntry}" ]; then
           return 0  # Resource found in manifest
         fi
       done
       return 1  # Resource not found in manifest
     }
 
-    function removeContainer {
-      echo "Removing orphaned container: $1"
-      if [[ -n "''${DRY_RUN:-}" ]]; then
-        echo "Would run podman stop $1"
-        echo "Would run podman $resourceType rm -f $1"
-      else
-        ${config.services.podman.package}/bin/podman stop "$1"
-        ${config.services.podman.package}/bin/podman $resourceType rm -f "$1"
-      fi
+    # Function to fill resourceManifest from the manifest file
+    loadManifest() {
+      local manifestFile="''${1}"
+      VERBOSE_ENABLED && echo "Loading manifest from ''${manifestFile}..." || true
+      IFS=$'\n' read -r -d "" -a resourceManifest <<< "$(cat "''${manifestFile}")" || true
     }
 
-    function removeNetwork {
-      echo "Removing orphaned network: $1"
-      if [[ -n "''${DRY_RUN:-}" ]]; then
-        echo "Would run podman network rm $1"
-      else
-        if ! ${config.services.podman.package}/bin/podman network rm "$1"; then
-          echo "Failed to remove network $1. Is it still in use by a container?"
-          return 1
+    removeResource() {
+      local resourceType="''${1}"
+      local resource="''${2}"
+      echo "Removing orphaned ''${resourceType}: ''${resource}"
+      commands=()
+      case "''${resourceType}" in
+        "container")
+          commands+="${config.services.podman.package}/bin/podman ''${resourceType} stop ''${resource}"
+          commands+="${config.services.podman.package}/bin/podman ''${resourceType} rm -f ''${resource}"
+          ;;
+        "network")
+          commands+="${config.services.podman.package}/bin/podman ''${resourceType} rm ''${resource}"
+          ;;
+      esac
+      for command in "''${commands[@]}"; do
+        command=$(echo ''${command} | tr -d ';&|`')
+        DRYRUN_ENABLED && echo "Would run: ''${command}" && continue || true
+        VERBOSE_ENABLED && echo "Running: ''${command}" || true
+        if [[ "$(eval "''${command}")" != "''${resource}" ]]; then
+          echo -e "\tCommand failed: ''${command}"
+          usedByContainers=$(/nix/store/3xcbk8rnhi1710l8xnayz3y54z5323a2-podman-5.2.3/bin/podman container ls -a --filter "''${resourceType}=''${resource}" --format "{{.Names}}")
+          echo -e "\t''${resource} in use by containers: ''${usedByContainers}"
         fi
-      fi
+      done
     }
 
-    function cleanup {
-      local resourceType=$1
-      local manifestFile="${config.xdg.configHome}/podman/$2"
-      local extraListCommands="''${3:-}"
-      [[ $resourceType = "container" ]] && extraListCommands+=" -a"
+    resourceManifest=()
+    [[ "$@" == *"--verbose"* ]] && VERBOSE="true"
+    [[ "$@" == *"--dry-run"* ]] && DRY_RUN="true"
 
-      VERBOSE_ENABLED && echo "Cleaning up ''${resourceType}s not in manifest..."
-
-      loadManifest "$manifestFile"
-
-      formatString="{{.Name}}"
-      [[ $resourceType = "container" ]] && formatString="{{.Names}}"
-
-      # Capture the output of the podman command to a variable
-      local listOutput=$(${config.services.podman.package}/bin/podman $resourceType ls $extraListCommands --filter 'label=nix.home-manager.managed=true' --format "$formatString")
-
-      IFS=$'\n' read -r -d "" -a podmanResources <<< "$listOutput" || true
-
-      # Check if the array is populated and iterate over it
-      if [ ''${#resourceManifest[@]} -eq 0 ]; then
-        VERBOSE_ENABLED && echo "No ''${resourceType}s available to process."
-      else
-        for resource in "''${podmanResources[@]}"; do
-            if ! isResourceInManifest "$resource"; then
-
-              [[ $resourceType = "container" ]] && removeContainer "$resource"
-              [[ $resourceType = "network" ]] && removeNetwork "$resource"
-
-            else
-              if VERBOSE_ENABLED; then
-                echo "Keeping managed $resourceType: $resource"
-              fi
-            fi
-          done
-      fi
-    }
-
-    # Cleanup containers
-    cleanup "container" "containers.manifest"
-
-    # Cleanup networks
-    cleanup "network" "networks.manifest"
+    for type in "container" "network"; do
+      cleanup "''${type}" "''${type}s.manifest"
+    done
   '';
 
   # derivation to build a single Podman quadlet, outputting its systemd unit files
