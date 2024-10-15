@@ -8,7 +8,9 @@ let
       v' = (if builtins.isBool v then
         (if v then "true" else "false")
       else if builtins.isAttrs v then
-        (concatStringsSep "${k}=" (mapAttrsToList normalizeKeyValue v))
+        (concatStringsSep ''
+
+          ${k}='' (mapAttrsToList normalizeKeyValue v))
       else
         builtins.toString v);
     in if builtins.isNull v then "" else "${k}=${v'}";
@@ -21,11 +23,42 @@ let
     listsAsDuplicateKeys = true;
     mkKeyValue = normalizeKeyValue;
   };
+
+  # meant for ini. favours b when two values are unmergeable
+  deepMerge = a: b:
+    lib.foldl' (result: key:
+      let
+        aVal = if builtins.hasAttr key a then a.${key} else null;
+        bVal = if builtins.hasAttr key b then b.${key} else null;
+
+        # check if the types inside a list match the type of a primitive
+        listMatchesType = (list: val:
+          lib.isList list && builtins.length list > 0
+          && builtins.typeOf (builtins.head list) == builtins.typeOf val);
+      in if isAttrs aVal && isAttrs bVal then
+        result // { ${key} = deepMerge aVal bVal; }
+      else if isList aVal && isList bVal then
+        result // { ${key} = aVal ++ bVal; }
+      else if aVal == bVal then
+        result // { ${key} = aVal; }
+      else if aVal == null then
+        result // { ${key} = bVal; }
+      else if bVal == null then
+        result // { ${key} = aVal; }
+      else if isList aVal && listMatchesType aVal bVal then
+        result // { ${key} = aVal ++ [ bVal ]; }
+      else if isList bVal && listMatchesType bVal aVal then
+        result // { ${key} = [ aVal ] ++ bVal; }
+      else if builtins.typeOf aVal == builtins.typeOf bVal then
+        result // { ${key} = bVal; }
+      else
+        result // { ${key} = bVal; }) a (builtins.attrNames b);
 in {
   inherit primitiveAttrs;
   inherit primitiveList;
   inherit primitive;
   inherit toQuadletIni;
+  inherit deepMerge;
 
   buildConfigAsserts = quadletName: section: config:
     let
@@ -34,8 +67,11 @@ in {
           AddCapability = with types; listOf str;
           AddDevice = with types; listOf str;
           AutoUpdate = types.enum [ null "registry" "local" ];
-          ContainerName = types.str;
+          ContainerName = types.enum [ quadletName ];
           DropCapability = with types; listOf str;
+          Entrypoint = with types; str;
+          Environment = primitiveAttrs;
+          EnvironmentFile = with types; listOf str;
           Exec = types.str;
           Group = with types; oneOf [ int str ];
           Image = types.str;
@@ -52,9 +88,7 @@ in {
         Install = { WantedBy = with types; listOf str; };
         Network = {
           Driver = with types; enum [ "bridge" "ipvlan" "macvlan" ];
-          Gateway = types.str;
-          Internal = types.bool;
-          NetworkName = types.str;
+          NetworkName = types.enum [ quadletName ];
           Label = primitiveAttrs;
           Options = primitiveAttrs;
           PodmanArgs = with types; listOf str;
@@ -116,9 +150,7 @@ in {
     '' else
       abort ''
         All quadlets must be of the same type.
-          Quadlet types in this manifest: ${
-            concatStringsSep ", " quadletTypes
-          }
+          Quadlet types in this manifest: ${concatStringsSep ", " quadletTypes}
       '';
 
   # podman requires setuid on newuidmad, so it cannot be provided by pkgs.shadow

@@ -5,7 +5,7 @@ with lib;
 let
   podman-lib = import ./podman-lib.nix { inherit lib config; };
 
-  awaitPodmanUnshare = pkgs.writeShellScriptBin "await-podman-unshare" ''
+  awaitPodmanUnshare = pkgs.writeShellScript "await-podman-unshare" ''
     until ${config.services.podman.package}/bin/podman unshare ${pkgs.coreutils}/bin/true; do
       sleep 1;
     done
@@ -13,7 +13,7 @@ let
 
   createQuadletSource = name: networkDef:
     let
-      cfg = (lib.recursiveUpdate {
+      cfg = (podman-lib.deepMerge {
         Install = {
           WantedBy = (if networkDef.autoStart then [
             "default.target"
@@ -26,17 +26,18 @@ let
           Gateway = networkDef.gateway;
           Internal = networkDef.internal;
           NetworkName = name;
-          Label = (lib.recursiveUpdate { "nix.home-manager.managed" = true; }
-            networkDef.labels);
+          Label = networkDef.labels // { "nix.home-manager.managed" = true; };
           PodmanArgs = networkDef.extraPodmanArgs;
           Subnet = networkDef.subnet;
         };
         Service = {
           Environment = {
-            PATH = "${podman-lib.newuidmapPaths}:"
-              + "${makeBinPath [ pkgs.su pkgs.coreutils ]}";
+            PATH = (builtins.concatStringsSep ":" [
+              "${podman-lib.newuidmapPaths}"
+              "${makeBinPath [ pkgs.su pkgs.coreutils ]}"
+            ]);
           };
-          ExecStartPre = [ "${awaitPodmanUnshare}/bin/await-podman-unshare" ];
+          ExecStartPre = [ "${awaitPodmanUnshare}" ];
           TimeoutStartSec = 15;
           RemainAfterExit = "yes";
         };

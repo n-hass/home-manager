@@ -82,7 +82,6 @@ in {
     # if the length of builtQuadlets is 0, then we don't need register the activation script
     home.activation.podmanQuadletCleanup =
       lib.mkIf (lib.length builtQuadlets >= 1)
-      (lib.hm.dag.entryAfter [ "reloadSystemd" ]
-        activationCleanupScript);
+      (lib.hm.dag.entryAfter [ "reloadSystemd" ] activationCleanupScript);
   };
 }
