@@ -4,26 +4,28 @@
   config = {
     services.podman.containers."my-container" = {
       description = "home-manager test";
-      autoupdate = "registry";
-      autostart = true;
-      image = "docker.io/alpine:latest";
-      entrypoint = "sleep 1000";
+      autoStart = true;
+      autoUpdate = "registry";
+      devices = [ "/dev/null:/dev/null" ];
+      entrypoint = "/sleep.sh";
       environment = {
         "VAL_A" = "A";
         "VAL_B" = 2;
         "VAL_C" = false;
       };
+      podmanArgs = [ "--security-opt=no-new-privileges" ];
+      extraConfig = {
+        Container = {
+          ReadOnlyTmpfs = true;
+        };
+        Service.Restart = "on-failure";
+        Unit.Before = "fake.target";
+      };
+      image = "docker.io/alpine:latest";
+      network = [ "mynet" ]; # should not generate Requires/After for network because there is no services.podman.networks.mynet
+      networkAlias = [ "test-alias" ];
       ports = [ "8080:80" ];
       volumes = [ "/tmp:/tmp" ];
-      devices = [ "/dev/null:/dev/null" ];
-
-      networks = [ "mynet" ];
-      networkAlias = "test-alias";
-
-      extraOptions = [ "--security-opt=no-new-privileges" ];
-      extraContainerConfig = { ReadOnlyTmpfs = true; };
-      serviceConfig = { Restart = "on-failure"; };
-      unitConfig = { Before = [ "fake.target" ]; };
     };
 
     nmt.script = ''
@@ -40,9 +42,17 @@
       assertFileContains $containerFile \
         "Image=docker.io/alpine:latest"
       assertFileContains $containerFile \
-        "PodmanArgs=--network-alias test-alias --entrypoint sleep 1000 --security-opt=no-new-privileges"
+        "PodmanArgs=--security-opt=no-new-privileges"
       assertFileContains $containerFile \
-        "Environment=VAL_A=A VAL_B=2 VAL_C=false"
+        "NetworkAlias=test-alias"
+      assertFileContains $containerFile \
+        "Entrypoint=/sleep.sh"
+      assertFileContains $containerFile \
+        "Environment=VAL_A=A"
+      assertFileContains $containerFile \
+        "Environment=VAL_B=2"
+      assertFileContains $containerFile \
+        "Environment=VAL_C=false"
       assertFileContains $containerFile \
         "PublishPort=8080:80"
       assertFileContains $containerFile \
@@ -51,10 +61,12 @@
         "AddDevice=/dev/null:/dev/null"
       assertFileContains $containerFile \
         "Network=mynet"
-      assertFileContains $containerFile \
+      assertFileNotContains $containerFile \
         "Requires=podman-mynet-network.service"
+      assertFileNotContains $containerFile \
+        "After=podman-mynet-network.service"
       assertFileContains $containerFile \
-        "After=network.target podman-mynet-network.service"
+        "After=network.target"
       assertFileContains $containerFile \
         "ReadOnlyTmpfs=true"
       assertFileContains $containerFile \
@@ -62,7 +74,9 @@
       assertFileContains $containerFile \
         "Before=fake.target"
       assertFileContains $containerFile \
-        "WantedBy=multi-user.target default.target"
+        "WantedBy=multi-user.target"
+      assertFileContains $containerFile \
+        "WantedBy=default.target"
       assertFileContains $containerFile \
         "Label=nix.home-manager.managed=true"
     '';
