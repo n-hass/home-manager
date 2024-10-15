@@ -35,6 +35,8 @@
         "After=externalnet"
       assertFileNotRegex $containerFile \
         "Requires=externalnet"
+      assertFileNotRegex $containerFile \
+        "PublishPort=.*$"
       assertFileContains $networkFile \
         "Subnet=192.168.123.0/24"
     '';

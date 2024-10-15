@@ -5,6 +5,7 @@
     services.podman.networks."my-net" = {
       subnet = "192.168.1.0/24";
       gateway = "192.168.1.1";
+      extraOptions = [ "--ipam-driver dhcp" ];
       extraConfig = {
         Network = {
           Options = {
@@ -30,6 +31,8 @@
         "PodmanArgs=--dns=192.168.55.1"
       assertFileContains $networkFile \
         "PodmanArgs=--log-level=debug"
+      assertFileContains $networkFile \
+        "PodmanArgs=--ipam-driver dhcp"
       assertFileContains $networkFile \
         "Options=isolate=true"
       assertFileContains $networkFile \

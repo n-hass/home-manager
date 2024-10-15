@@ -13,13 +13,13 @@ let
         else
           null;
 
-      managedNetworks = if lib.isList containerDef.network then
-        map mapHmNetworks containerDef.network
-      else if containerDef.network != null then
-        map mapHmNetworks [ containerDef.network ]
-      else [ ];
-
-      finalConfig = (podman-lib.deepMerge {
+      finalConfig = let
+        managedNetworks = if lib.isList containerDef.network then
+          map mapHmNetworks containerDef.network
+        else if containerDef.network != null then
+          map mapHmNetworks [ containerDef.network ]
+        else [ ];
+      in (podman-lib.deepMerge {
         Container = {
           AddCapability = containerDef.addCapabilities;
           AddDevice = containerDef.devices;
@@ -38,7 +38,7 @@ let
             (containerDef.labels // { "nix.home-manager.managed" = true; });
           Network = containerDef.network;
           NetworkAlias = containerDef.networkAlias;
-          PodmanArgs = containerDef.podmanArgs;
+          PodmanArgs = containerDef.extraOptions;
           PublishPort = containerDef.ports;
           UserNS = containerDef.userNS;
           User = containerDef.user;
@@ -102,7 +102,7 @@ in let
     options = {
 
       addCapabilities = mkOption {
-        type = with types; listOf str;
+        type = with types; either str (listOf str);
         default = [ ];
         description = "The capabilities to add to the container.";
         example = literalMD ''
@@ -136,19 +136,23 @@ in let
       };
 
       devices = mkOption {
-        type = types.listOf types.str;
+        type = with types; either str (listOf str);
         default = [ ];
         description = "The devices to mount into the container";
         example = literalMD ''
+          `devices = "/dev/null:/dev/null";`
+          or
           `devices = [ "/dev/<host>:/dev/<container>" ];`
         '';
       };
 
       dropCapabilities = mkOption {
-        type = with types; listOf str;
+        type = with types; either str (listOf str);
         default = [ ];
         description = "The capabilities to drop from the container.";
         example = literalMD ''
+          `dropCapabilities = "CAP_DAC_OVERRIDE";`
+          or
           `dropCapabilities = [ "CAP_DAC_OVERRIDE" "CAP_IPC_OWNER" ];`
         '';
       };
@@ -178,7 +182,7 @@ in let
       };
 
       environmentFile = mkOption {
-        type = with types; nullOr (either str (listOf str));
+        type = with types; either str (listOf str);
         default = [ ];
         description =
           "Paths to files containing container environment variables.";
@@ -198,10 +202,15 @@ in let
         '';
       };
 
-      podmanArgs = mkOption {
-        type = with types; listOf str;
+      extraOptions = mkOption {
+        type = with types; either str (listOf str);
         default = [ ];
         description = "Extra arguments to pass to the podman run command.";
+        example = literalMD ''
+          `extraOptions = "--security-opt=no-new-privileges";`
+          or
+          `extraOptions = [ "--security-opt=no-new-privileges" "--security-opt=seccomp=unconfined" ];`
+        '';
       };
 
       extraConfig = mkOption {
@@ -264,8 +273,8 @@ in let
       };
 
       network = mkOption {
-        type = with types; nullOr (either str (listOf str));
-        default = null;
+        type = with types; either str (listOf str);
+        default = [ ];
         description =
           "The network mode or network/s to connect the container to. Equivalent to `podman run --network=<option>`";
         example = literalMD ''
@@ -278,7 +287,7 @@ in let
       };
 
       networkAlias = mkOption {
-        type = with types; nullOr (either str (listOf str));
+        type = with types; either str (listOf str);
         default = [ ];
         description = "Network aliases for the container.";
         example = literalMD ''
@@ -289,11 +298,13 @@ in let
       };
 
       ports = mkOption {
-        type = with types; listOf str;
+        type = with types; either str (listOf str);
         default = [ ];
         description = "A mapping of ports between host and container";
         example = literalMD ''
-          `ports = [ "8080:80" ];`
+          `ports = "8080:80";`
+          or
+          `ports = [ "8080:80" "8443:443" ];`
         '';
       };
 
@@ -310,7 +321,7 @@ in let
       };
 
       volumes = mkOption {
-        type = with types; listOf str;
+        type = with types; either str (listOf str);
         default = [ ];
         description = "The volumes to mount into the container.";
         example = literalMD ''

@@ -26,14 +26,14 @@ let
 
   # meant for ini. favours b when two values are unmergeable
   deepMerge = a: b:
-    lib.foldl' (result: key:
+    foldl' (result: key:
       let
         aVal = if builtins.hasAttr key a then a.${key} else null;
         bVal = if builtins.hasAttr key b then b.${key} else null;
 
         # check if the types inside a list match the type of a primitive
         listMatchesType = (list: val:
-          lib.isList list && builtins.length list > 0
+          isList list && builtins.length list > 0
           && builtins.typeOf (builtins.head list) == builtins.typeOf val);
       in if isAttrs aVal && isAttrs bVal then
         result // { ${key} = deepMerge aVal bVal; }

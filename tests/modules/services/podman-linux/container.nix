@@ -13,7 +13,7 @@
         "VAL_B" = 2;
         "VAL_C" = false;
       };
-      podmanArgs = [ "--security-opt=no-new-privileges" ];
+      extraOptions = [ "--security-opt=no-new-privileges" ];
       extraConfig = {
         Container = {
           ReadOnlyTmpfs = true;
@@ -24,7 +24,7 @@
       image = "docker.io/alpine:latest";
       network = [ "mynet" ]; # should not generate Requires/After for network because there is no services.podman.networks.mynet
       networkAlias = [ "test-alias" ];
-      ports = [ "8080:80" ];
+      ports = "8080:80";
       volumes = [ "/tmp:/tmp" ];
     };
 
@@ -47,12 +47,12 @@
         "NetworkAlias=test-alias"
       assertFileContains $containerFile \
         "Entrypoint=/sleep.sh"
-      assertFileContains $containerFile \
-        "Environment=VAL_A=A"
-      assertFileContains $containerFile \
-        "Environment=VAL_B=2"
-      assertFileContains $containerFile \
-        "Environment=VAL_C=false"
+      assertFileRegex $containerFile \
+        'Environment=VAL_A=A$'
+      assertFileRegex $containerFile \
+        'Environment=VAL_B=2$'
+      assertFileRegex $containerFile \
+        'Environment=VAL_C=false$'
       assertFileContains $containerFile \
         "PublishPort=8080:80"
       assertFileContains $containerFile \
@@ -79,6 +79,18 @@
         "WantedBy=default.target"
       assertFileContains $containerFile \
         "Label=nix.home-manager.managed=true"
+      assertFileNotRegex $containerFile \
+        "Network=$"
+      assertFileNotRegex $containerFile \
+        "NetworkAlias=$"
+      assertFileNotRegex $containerFile \
+        "EnvironmentFile=$"
+      assertFileNotRegex $containerFile \
+        "Volume=$"
+      assertFileNotRegex $containerFile \
+        "User=$"
+      assertFileNotRegex $containerFile \
+        "Exec=$"
     '';
   };
 }
