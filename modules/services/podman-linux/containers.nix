@@ -18,7 +18,8 @@ let
           map mapHmNetworks containerDef.network
         else if containerDef.network != null then
           map mapHmNetworks [ containerDef.network ]
-        else [ ];
+        else
+          [ ];
       in (podman-lib.deepMerge {
         Container = {
           AddCapability = containerDef.addCapabilities;

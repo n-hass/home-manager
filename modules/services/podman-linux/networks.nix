@@ -124,7 +124,8 @@ in let
       extraOptions = mkOption {
         type = with types; either str (listOf str);
         default = [ ];
-        description = "Extra arguments to pass to the podman network create command.";
+        description =
+          "Extra arguments to pass to the podman network create command.";
         example = literalMD ''
           `extraOptions = "--dns=192.168.55.1";`
           or

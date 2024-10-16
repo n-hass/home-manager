@@ -15,14 +15,14 @@
       };
       extraOptions = [ "--security-opt=no-new-privileges" ];
       extraConfig = {
-        Container = {
-          ReadOnlyTmpfs = true;
-        };
+        Container = { ReadOnlyTmpfs = true; };
         Service.Restart = "on-failure";
         Unit.Before = "fake.target";
       };
       image = "docker.io/alpine:latest";
-      network = [ "mynet" ]; # should not generate Requires/After for network because there is no services.podman.networks.mynet
+      network = [
+        "mynet"
+      ]; # should not generate Requires/After for network because there is no services.podman.networks.mynet
       networkAlias = [ "test-alias" ];
       ports = "8080:80";
       volumes = [ "/tmp:/tmp" ];

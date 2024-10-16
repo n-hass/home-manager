@@ -8,9 +8,7 @@
       extraOptions = [ "--ipam-driver dhcp" ];
       extraConfig = {
         Network = {
-          Options = {
-            isolate = "true";
-          };
+          Options = { isolate = "true"; };
           PodmanArgs = [ "--dns=192.168.55.1" "--log-level=debug" ];
         };
       };

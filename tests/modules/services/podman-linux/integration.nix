@@ -5,10 +5,7 @@
     services.podman = {
       containers."my-container" = {
         image = "docker.io/alpine:latest";
-        network = [
-          "my-net"
-          "externalnet"
-        ];
+        network = [ "my-net" "externalnet" ];
       };
       networks."my-net" = {
         gateway = "192.168.123.1";
