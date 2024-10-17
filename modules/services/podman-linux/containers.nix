@@ -80,22 +80,14 @@ let
       ${podman-lib.toQuadletIni finalConfig}
     '';
 
-  toQuadletInternal = name: containerDef:
-    let
-      allAssertions = (map (section:
-        if builtins.hasAttr section containerDef.extraConfig then
-          (podman-lib.buildConfigAsserts name section
-            containerDef.extraConfig."${section}")
-        else
-          [ ]) [ "Container" "Install" "Service" "Unit" ]);
-    in {
-      assertions = allAssertions;
-      resourceType = "container";
-      serviceName =
-        "podman-${name}"; # quadlet service name: 'podman-<name>.service'
-      source =
-        podman-lib.removeBlankLines (createQuadletSource name containerDef);
-    };
+  toQuadletInternal = name: containerDef: {
+    assertions = podman-lib.buildConfigAsserts name containerDef.extraConfig;
+    resourceType = "container";
+    serviceName =
+      "podman-${name}"; # quadlet service name: 'podman-<name>.service'
+    source =
+      podman-lib.removeBlankLines (createQuadletSource name containerDef);
+  };
 
 in let
   # Define the container user type as the user interface

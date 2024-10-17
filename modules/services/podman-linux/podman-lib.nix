@@ -60,65 +60,31 @@ in {
   inherit toQuadletIni;
   inherit deepMerge;
 
-  buildConfigAsserts = quadletName: section: config:
+  buildConfigAsserts = quadletName: extraConfig:
     let
       configRules = {
-        Container = {
-          AddCapability = with types; listOf str;
-          AddDevice = with types; listOf str;
-          AutoUpdate = types.enum [ null "registry" "local" ];
-          ContainerName = types.enum [ quadletName ];
-          DropCapability = with types; listOf str;
-          Entrypoint = with types; str;
-          Environment = primitiveAttrs;
-          EnvironmentFile = with types; listOf str;
-          Exec = types.str;
-          Group = with types; oneOf [ int str ];
-          Image = types.str;
-          IP = types.str;
-          IP6 = types.str;
-          Label = primitiveAttrs;
-          Network = with types; listOf str;
-          PodmanArgs = with types; listOf str;
-          PublishPort = with types; listOf str;
-          UserNS = types.str;
-          User = with types; oneOf [ int str ];
-          Volume = with types; listOf str;
-        };
-        Install = { WantedBy = with types; listOf str; };
-        Network = {
-          Driver = with types; enum [ "bridge" "ipvlan" "macvlan" ];
-          NetworkName = types.enum [ quadletName ];
-          Label = primitiveAttrs;
-          Options = primitiveAttrs;
-          PodmanArgs = with types; listOf str;
-          Subnet = types.str;
-        };
-        Service = {
-          Environment = primitiveAttrs;
-          EnvironmentFile = with types; listOf str;
-          ExecStartPre = with types; listOf str;
-          RemainAfterExit = with types; nullOr enum [ "yes" ];
-          Restart = types.enum [ "no" "always" "on-failure" "unless-stopped" ];
-          TimeoutStartSec = types.int;
-          TimeoutStopSec = types.int;
-        };
-        Unit = {
-          After = with types; listOf str;
-          Description = types.str;
-          Requires = with types; listOf str;
-        };
+        Container = { ContainerName = types.enum [ quadletName ]; };
+        Network = { NetworkName = types.enum [ quadletName ]; };
       };
-    in flatten (mapAttrsToList (name: value:
-      if hasAttr name configRules.${section} then [{
-        assertion = configRules.${section}.${name}.check value;
-        message = "in '${quadletName}' config. ${section}.${name}: '${
-            toString value
-          }' does not match expected type: ${
-            configRules.${section}.${name}.description
-          }";
-      }] else
-        [ ]) config);
+
+      # Function to build assertions for a specific section and its attributes.
+      buildSectionAsserts = section: attrs:
+        if builtins.hasAttr section configRules then
+          flatten (mapAttrsToList (attrName: attrValue:
+            if builtins.hasAttr attrName configRules.${section} then [{
+              assertion = configRules.${section}.${attrName}.check attrValue;
+              message = "In '${quadletName}' config. ${section}.${attrName}: '${
+                  toString attrValue
+                }' does not match expected type: ${
+                  configRules.${section}.${attrName}.description
+                }";
+            }] else
+              [ ]) attrs)
+        else
+          [ ];
+
+      # Flatten assertions from all sections in `extraConfig`.
+    in flatten (mapAttrsToList buildSectionAsserts extraConfig);
 
   extraConfigType = with types;
     attrsOf (attrsOf (oneOf [ primitiveAttrs primitiveList primitive ]));

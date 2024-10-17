@@ -57,22 +57,13 @@ let
       ${podman-lib.toQuadletIni cfg}
     '';
 
-  toQuadletInternal = name: networkDef:
-    let
-      allAssertions = (map (section:
-        if builtins.hasAttr section networkDef.extraConfig then
-          (podman-lib.buildConfigAsserts name section
-            networkDef.extraConfig."${section}")
-        else
-          [ ]) [ "Install" "Network" "Service" "Unit" ]);
-    in {
-      assertions = allAssertions;
-      serviceName =
-        "podman-${name}"; # quadlet service name: 'podman-<name>-network.service'
-      source =
-        podman-lib.removeBlankLines (createQuadletSource name networkDef);
-      resourceType = "network";
-    };
+  toQuadletInternal = name: networkDef: {
+    assertions = podman-lib.buildConfigAsserts name networkDef.extraConfig;
+    serviceName =
+      "podman-${name}"; # quadlet service name: 'podman-<name>-network.service'
+    source = podman-lib.removeBlankLines (createQuadletSource name networkDef);
+    resourceType = "network";
+  };
 
 in let
   networkDefinitionType = types.submodule {
