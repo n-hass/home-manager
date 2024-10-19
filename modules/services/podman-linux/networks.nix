@@ -27,7 +27,7 @@ let
           Internal = networkDef.internal;
           NetworkName = name;
           Label = networkDef.labels // { "nix.home-manager.managed" = true; };
-          PodmanArgs = networkDef.extraOptions;
+          PodmanArgs = networkDef.extraPodmanArgs;
           Subnet = networkDef.subnet;
         };
         Service = {
@@ -112,15 +112,15 @@ in let
         '';
       };
 
-      extraOptions = mkOption {
+      extraPodmanArgs = mkOption {
         type = with types; either str (listOf str);
         default = [ ];
         description =
           "Extra arguments to pass to the podman network create command.";
         example = literalMD ''
-          `extraOptions = "--dns=192.168.55.1";`
+          `extraPodmanArgs = "--dns=192.168.55.1";`
           or
-          `extraOptions = [ "--dns=192.168.55.1" "--ipam-driver" ];`
+          `extraPodmanArgs = [ "--dns=192.168.55.1" "--ipam-driver" ];`
         '';
       };
 

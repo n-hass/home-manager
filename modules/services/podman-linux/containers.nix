@@ -39,7 +39,7 @@ let
             (containerDef.labels // { "nix.home-manager.managed" = true; });
           Network = containerDef.network;
           NetworkAlias = containerDef.networkAlias;
-          PodmanArgs = containerDef.extraOptions;
+          PodmanArgs = containerDef.extraPodmanArgs;
           PublishPort = containerDef.ports;
           UserNS = containerDef.userNS;
           User = containerDef.user;
@@ -195,14 +195,14 @@ in let
         '';
       };
 
-      extraOptions = mkOption {
+      extraPodmanArgs = mkOption {
         type = with types; either str (listOf str);
         default = [ ];
         description = "Extra arguments to pass to the podman run command.";
         example = literalMD ''
-          `extraOptions = "--security-opt=no-new-privileges";`
+          `extraPodmanArgs = "--security-opt=no-new-privileges";`
           or
-          `extraOptions = [ "--security-opt=no-new-privileges" "--security-opt=seccomp=unconfined" ];`
+          `extraPodmanArgs = [ "--security-opt=no-new-privileges" "--security-opt=seccomp=unconfined" ];`
         '';
       };
 

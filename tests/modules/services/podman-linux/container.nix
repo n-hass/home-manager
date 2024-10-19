@@ -14,7 +14,7 @@
           "VAL_B" = 2;
           "VAL_C" = false;
         };
-        extraOptions = [ "--security-opt=no-new-privileges" ];
+        extraPodmanArgs = [ "--security-opt=no-new-privileges" ];
         extraConfig = {
           Container = { ReadOnlyTmpfs = true; };
           Service.Restart = "on-failure";
